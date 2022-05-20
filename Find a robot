@@ -1,0 +1,165 @@
+using System;
+
+namespace FindIntruder
+{
+
+
+    class Program
+    {
+        public struct position
+        {
+            public int x;
+            public int y;
+        }
+
+        static void Main(string[] args)
+        {
+
+            position intruder;
+            intruder.x = 7;
+            intruder.y = 4;
+
+            position noFound;
+            noFound.x = -1;
+            noFound.y = -1;
+
+            position robot_start;
+            robot_start.x = 7;
+            robot_start.y = 4;
+
+            bool intruderFound = false;
+
+            char[,] building = new char[8, 5]{
+                {'-','-','-','-','-'},
+                {'-','-','w','w','-'}, 
+                {'-','-','-','-','-'},
+                {'i','-','-','-','-'},
+                {'-','-','w','w','w'},
+                {'-','-','-','-','-'},
+                {'-','-','-','-','-'},
+                {'-','-','-','-','-'}};
+
+            position FindIntruder(position robot_start, char[,] building)
+            {
+
+                building[robot_start.x, robot_start.y] = 'x';
+
+                //FillWithOccupiedX(robot_start.x, robot_start.y);
+
+                while (!intruderFound)
+                {
+                    for (int i = 0; i < building.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < building.GetLength(1); j++)
+                        {
+                            if (building[i, j] == 'x')
+                            {
+                                FillWithOccupiedX(i, j);
+                            }
+                        }
+                    }
+                }
+
+
+                //for printing
+                for (int i = 0; i < building.GetLength(0); i++)
+                {
+                    for (int j = 0; j < building.GetLength(1); j++)
+                    {
+                        Console.Write(building[i, j] + "\t");
+                    }
+                    Console.WriteLine();
+                }
+
+
+                return noFound;
+            }
+
+            FindIntruder(robot_start,building);
+
+            position FillWithOccupiedX(int i, int j) {
+
+                //Find intruder first
+                if (i - 1 >= 0)
+                {
+                    if (building[i - 1, j] == 'i')
+                    {
+                        intruder.x = i - 1;
+                        intruder.y = j;
+
+                        Console.WriteLine("Intruder found");
+                        intruderFound = true;
+                        return intruder;
+                    }
+                    else if (building[i - 1, j] == '-')
+                    {
+                        building[i - 1, j] = 'x';
+                    }
+
+                }
+
+                if (i + 1 < 8)
+                {
+                    if (building[i + 1, j] == 'i')
+                    {
+                        intruder.x = i + 1;
+                        intruder.y = j;
+
+                        intruderFound = true;
+                        Console.WriteLine("Intruder found");
+                        return intruder;
+                    }
+                    else if (building[i + 1, j] == '-')
+                    {
+                        building[i + 1, j] = 'x';
+                    }
+
+
+                }
+
+                if (j - 1 >= 0)
+                {
+                    if (building[i, j - 1] == 'i')
+                    {
+                        intruder.x = i;
+                        intruder.y = j - 1;
+
+                        intruderFound = true;
+                        Console.WriteLine("Intruder found");
+                        return intruder;
+                    }
+                    else if (building[i, j - 1] == '-')
+                    {
+                        building[i, j - 1] = 'x';
+                    }
+
+                }
+
+                if (j + 1 < 4)
+                {
+                    if (building[i, j + 1] == 'i')
+                    {
+                        intruder.x = i;
+                        intruder.y = j + 1;
+
+                        intruderFound = true;
+                        Console.WriteLine("Intruder found");
+                        return intruder;
+                    }
+                    else if (building[i, j + 1] == '-')
+                    {
+                        building[i, j + 1] = 'x';
+                    }
+
+                }
+                return noFound;
+
+            };
+
+            Console.WriteLine("Hello World!");
+
+
+
+        }
+    }
+}
